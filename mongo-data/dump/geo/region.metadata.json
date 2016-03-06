@@ -1,0 +1,1 @@
+{ "options" : { "create" : "region" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "geo.region", "name" : "_id_" } ] }
