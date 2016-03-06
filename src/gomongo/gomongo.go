@@ -11,6 +11,7 @@ var port int
 
 func init() {
 	flag.IntVar(&port, "port", 8080, "Port on which to listen")
+	flag.Parse()
 }
 func main() {
 	log.Println("Starting server on port", port)
