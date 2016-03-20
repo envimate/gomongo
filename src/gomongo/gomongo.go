@@ -6,12 +6,16 @@ import (
 	"flag"
 	"fmt"
 	"io"
+ 	"gopkg.in/mgo.v2"
+	"strconv"
 )
 
 var port int
+var mongourl string
 
 func init() {
 	flag.IntVar(&port, "port", 8080, "Port on which to listen")
+	flag.StringVar(&mongourl, "mongourl", "mongodb://localhost:27017", "the mongodb connection url")
 	flag.Parse()
 }
 
@@ -22,27 +26,58 @@ func defaultHandler(rw http.ResponseWriter, request *http.Request){
 	io.WriteString(rw, request.RequestURI)
 }
 
-func cityIdHandler(rw http.ResponseWriter, request *http.Request){
+func (mhandler *MongoHandler) cityIdHandler(rw http.ResponseWriter, request *http.Request){
+	cityColl := mhandler.db.C("city")
 	query := request.URL.Query()
-	io.WriteString(rw, query.Get("id")+"\n")
+	cityId := query.Get("id")
+	io.WriteString(rw, cityId +"\n")
+
+	result := City{}
+
+	id, _ := strconv.ParseInt(cityId, 10, 64)
+
+	err := cityColl.FindId(id).One(&result)
+	if err != nil {
+		io.WriteString(rw, "City with id "+cityId +" not found\n")
+		log.Println(err)
+		return
+	}
+
+	io.WriteString(rw, "Found city " + result.name +"\n")
+}
+
+type City struct {
+	id int
+	name string
 }
 
 func main() {
 	log.Println("Starting server on port", port)
+
+	session, err := mgo.Dial(mongourl)
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	db := session.DB("geo")
+
+	mh := &MongoHandler{db}
 	s := &http.Server {
 		Addr: fmt.Sprintf(":%d", port),
-		Handler: &MongoHandler{},
+		Handler: mh,
 	}
 
 	mux = make(map[string]func(http.ResponseWriter, *http.Request))
 
 	mux["/"] = defaultHandler
-	mux["/city"] = cityIdHandler
+	mux["/city"] = mh.cityIdHandler
 
 	log.Fatal(s.ListenAndServe())
 }
 
 type MongoHandler struct {
+	db *mgo.Database
 }
 
 func (mhandler *MongoHandler) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
