@@ -1,5 +1,5 @@
 #!/bin/bash
-export GOPATH=`pwd`
+export GOPATH=$(dirname $(readlink -f $0))
 
-go get gopkg.in/mgo.v2
-go install -v gomongo 
+go get -d -v gomongo
+go install -v gomongo

@@ -1,0 +1,14 @@
+version: '2'
+services:
+    gomongo:
+        build: 
+            context: ../
+            dockerfile: docker/Dockerfile
+        ports:
+            - "8080:8080"
+        links:
+            - mongodb
+        restart: always
+        container_name: gomongo
+    mongodb:
+        image: "mongo"
