@@ -1,0 +1,5 @@
+FROM mongo
+
+ADD mongo-data/dump/geo /initial-data/geo
+
+CMD mongorestore -h mongodb -d geo /initial-data/geo
