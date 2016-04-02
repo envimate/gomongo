@@ -37,18 +37,19 @@ func (mhandler *MongoHandler) cityIdHandler(rw http.ResponseWriter, request *htt
 	id, _ := strconv.ParseInt(cityId, 10, 64)
 
 	err := cityColl.FindId(id).One(&result)
+	fmt.Printf("%+v", cityColl.FindId(id))
 	if err != nil {
 		io.WriteString(rw, "City with id "+cityId +" not found\n")
 		log.Println(err)
 		return
 	}
 
-	io.WriteString(rw, "Found city " + result.name +"\n")
+	io.WriteString(rw, "Found city " + result.Name +"\n")
 }
 
 type City struct {
-	id int
-	name string
+	Id int64
+	Name string
 }
 
 func main() {

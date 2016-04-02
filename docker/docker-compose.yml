@@ -6,11 +6,17 @@ services:
             dockerfile: docker/Dockerfile
         ports:
             - "80:8080"
-        links:
-            - mongodb
+        depends_on:
+            - mongodb_import
         restart: always
         container_name: gomongo
         environment:
             - MONGO_URL=mongodb://mongodb:27017
+    mongodb_import:
+        build:
+            context: ../
+            dockerfile: docker/mongo_Dockerfile
+        depends_on:
+            - mongodb
     mongodb:
         image: "mongo"
