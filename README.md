@@ -30,6 +30,6 @@ Then run using `docker-compose`
 
 By default port 80 is mapped so you should see:
 
-`curl http://localhost:80/test
+`curl http://localhost:80/test`
 
-got request /test`
+`got request /test`
