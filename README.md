@@ -20,9 +20,8 @@ To run this example you need to have
 
 To see it in action, check it out
 
-`git clone git@github.com:envimate/gomongo.git`
-
-`cd gomongo`
+```git clone git@github.com:envimate/gomongo.git
+cd gomongo```
 
 Then run using `docker-compose` 
 
@@ -30,6 +29,5 @@ Then run using `docker-compose`
 
 By default port 80 is mapped so you should see:
 
-`curl http://localhost:80/test`
-
-`got request /test`
+```curl http://localhost:80/test
+got request /test```
