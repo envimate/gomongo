@@ -1,5 +1,6 @@
 #!/bin/bash
-export GOPATH=$(dirname $(readlink -f $0))
+export GOPATH=`pwd`
 
+echo $GOPATH
 go get -d -v gomongo
 go install -v gomongo
